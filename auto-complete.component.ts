@@ -14,6 +14,7 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
         padding: 0px;
         border: none;
         height: 500px;
+        overflow: visible;
     }
     .auto-complete-input-field-balham {
         outline: initial;
@@ -37,7 +38,7 @@ import { ICellEditorAngularComp } from 'ag-grid-angular';
         class="auto-complete-input-field-balham" 
         [style.width]="params.column.actualWidth + 'px'">
     <ag-grid-angular
-        style="width: 450px; max-height: 200px; font-weight: 200;" 
+        style="width: 850px; max-height: 200px; font-weight: 200;" 
         class="ag-theme-balham"
         [rowData]="rowData" 
         [columnDefs]="columnDefs"
@@ -58,6 +59,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     private columnDefs: any;
     private rowSelection: string = 'single';
     // variables for component
+    private returnObject: boolean = true;
     private cellValue: string;
     private filteredRowData: any;
     private inputValue: string;
@@ -88,6 +90,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
         this.columnDefs = params.columnDefs;
         this.propertyName = params.propertyRendered;
         this.cellValue = params.value[this.propertyName];
+        this.returnObject = params.returnObject;
 
         if (!params.charPress) {
             if(this.cellValue) this.inputValue = this.cellValue;
@@ -97,7 +100,8 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     }
 
     getValue(): any {
-        return this.selectedObject;
+       if (!this.returnObject) return this.selectedObject[this.propertyName];
+       return this.selectedObject;
     }
     isPopup(): boolean {
         return true;
