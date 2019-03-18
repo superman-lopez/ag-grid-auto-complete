@@ -59,7 +59,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     private columnDefs: any;
     private rowSelection: string = 'single';
     // variables for component
-    private returnObject: boolean = true;
+    private returnObject: boolean;
     private cellValue: string;
     private filteredRowData: any;
     private inputValue: string;
