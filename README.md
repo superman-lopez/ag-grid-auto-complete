@@ -21,9 +21,10 @@ And optionally for the cellRenderer the following configuration is needed under 
 ## Example
 ```  columnDefs = [
   { headerName: 'City', field: 'cityObject', editable: true, 
-    cellEditor: 'autoComplete', 
+    cellEditor: 'autoComplete',
     cellEditorParams: {
       'propertyRendered': 'city',
+      'returnObject' : true,
       'rowData': [
         { 'id': 1, 'city': 'Paris', 'country': 'France' },
         { 'id': 2, 'city': 'London', 'country': 'United Kingdom' },
