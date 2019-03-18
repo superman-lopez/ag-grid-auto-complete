@@ -14,6 +14,7 @@ This cellEditor can be used as an autocomplete text cell editor in for ag-Grid A
 - `rowData` of the presented options, in ag-Grid compliant format.
 - `columnDefs` of the presented options, in ag-Grid compliant format.
 - `propertyRendered` the field that is shown in the renderer, and thus used for the text autocomplete.
+- `returnObject` boolean flag to return either the undelying object of the row, or the text value of the cell.  If enabled, recommended to use the renderer or another solution.
 
 And optionally for the cellRenderer the following configuration is needed under `cellRendererParams`
 - `propertyRendered` the field that is shown in the renderer.
