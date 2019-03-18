@@ -8,7 +8,7 @@ I was looking for an autocomplete cellEditor but could not find any.  I decided 
 - Start editing by typing.
 - Autocomplete basis text input, but actual selection being an object.
 
-For the last requirement I wrote an accompanying cellRenderer.  The selection of the object is not mandatory, but the stackblitz example will show both.
+For the last requirement I wrote an accompanying cellRenderer.  The selection of the object is not mandatory, but the [stackblitz](https://stackblitz.com/edit/ag-grid-auto-complete) example will show both.
 ## Usage
 This cellEditor can be used as an autocomplete text cell editor in for ag-Grid Angular.  In the app component, the column definitions need to include the necessary configuration details under `cellEditorParams`:
 - `rowData` of the presented options, in ag-Grid compliant format.
@@ -44,3 +44,5 @@ And optionally for the cellRenderer the following configuration is needed under 
 
   }]
   ```
+  ## Demonstration
+  Demonstration on https://stackblitz.com/edit/ag-grid-auto-complete
