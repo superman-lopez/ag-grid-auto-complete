@@ -1,5 +1,5 @@
 # ag-grid-auto-complete
-Autocomplete cellEditor for ag-Grid, made in Angular component.
+Autocomplete cellEditor for ag-Grid, made in Angular component.  The component uses ag-theme-balham.
 
 ## Description
 I was looking for an autocomplete cellEditor but could not find any.  I decided to write a component that would use ag-Grid for the presentation of the selection box.  I had the following requirements:
