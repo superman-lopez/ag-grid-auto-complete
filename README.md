@@ -12,6 +12,7 @@ For the last requirement I wrote an accompanying cellRenderer.  The selection of
 ## Usage
 This cellEditor can be used as an autocomplete text cell editor in for ag-Grid Angular.  In the app component, the column definitions need to include the necessary configuration details under `cellEditorParams`:
 - `rowData` of the presented options, in ag-Grid compliant format.
+- `apiEndpoint`is the url of the API endpoint (use this instead of `rowData`).
 - `columnDefs` of the presented options, in ag-Grid compliant format.
 - `propertyRendered` the field that is shown in the renderer, and thus used for the text autocomplete.
 - `returnObject` boolean flag to return either the undelying object of the row, or the text value of the cell.  If enabled, recommended to use the renderer or another solution.
@@ -46,5 +47,12 @@ And optionally for the cellRenderer the following configuration is needed under 
 
   }]
   ```
+  
+  When an API is called, `rowData` can be left out and instead an API endpoint needs to be specified.  For example:
+  ```
+  'apiEndpoint': '/api/cities/'
+  ```
+  The component will use HttpClient to call the API and will query with the first 2 characters of the input field, with the `propertyRendered` as the query key.  For example its query would be: `/api/cities/?city=Pa` when the input field shows "Paris".  Even though the API query would only be basis "Pa" the grid is further filtered in the component to match "Paris".
+  
   ## Demonstration
   Demonstration on https://stackblitz.com/edit/ag-grid-auto-complete
