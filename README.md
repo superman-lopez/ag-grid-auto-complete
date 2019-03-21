@@ -45,7 +45,7 @@ And optionally for the cellRenderer the following configuration is needed under 
       'propertyRendered': 'city'
     }
 
-  }]
+  }
   ```
   
   When an API is called, `rowData` can be left out and instead an API endpoint needs to be specified.  For example:
