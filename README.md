@@ -21,7 +21,7 @@ And optionally for the cellRenderer the following configuration is needed under 
 - `propertyRendered` the field that is shown in the renderer.
 
 ## Example
-```  columnDefs = [
+```js  columnDefs = [
   { headerName: 'City', field: 'cityObject', editable: true, 
     cellEditor: 'autoComplete',
     cellEditorParams: {
@@ -49,7 +49,7 @@ And optionally for the cellRenderer the following configuration is needed under 
   ```
   
   When an API is called, `rowData` can be left out and instead an API endpoint needs to be specified.  For example:
-  ```
+  ```js
   'apiEndpoint': '/api/cities/'
   ```
   The component will use HttpClient to call the API and will query with the first 2 characters of the input field, with the `propertyRendered` as the query key.  For example its query would be: `/api/cities/?city=Pa` when the input field shows "Paris".  Even though the API query would only be basis "Pa" the grid is further filtered in the component to match "Paris".
