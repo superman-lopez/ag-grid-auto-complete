@@ -1,11 +1,12 @@
 # ag-grid-auto-complete
-Autocomplete cellEditor for ag-Grid, made as Angular component.  There are dependencies on Ag-Grid Angular as well as HttpClient.  The component uses ag-theme-balham.
+Autocomplete cellEditor for ag-Grid, made as Angular component.  There are dependencies on Ag-Grid Angular and HttpClient.  The component uses ag-theme-balham.
 
 ## Description
 I was looking for an autocomplete cellEditor but could not find any.  I decided to write a component that would use ag-Grid for the presentation of the selection box.  I had the following requirements:
 - Use keyboard input only, for start/end editing and selection.
 - Be able to use mouse input.
 - Start editing by typing.
+- Autocomplete basis an existing array of values, or basis an API.
 - Autocomplete basis text input, but actual selection being an object.
 
 For the last requirement, the [stackblitz](https://stackblitz.com/edit/ag-grid-auto-complete) example will show an example of both returning an object and returning just a value.
