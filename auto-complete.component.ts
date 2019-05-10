@@ -5,82 +5,60 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'auto-complete',
-    encapsulation: ViewEncapsulation.None,
-    //Can we pull the styles for the input field from params.eGridCell?
-    styles: [`
-    .ag-theme-balham .ag-popup-editor {
-        background-color: transparent;
-        position: absolute;
-        user-select: none;
-        padding: 0px;
-        border: none;
-        height: 500px;
-        overflow: visible;
-        left: 250px;
-        top: 10px;
-    }
-    .auto-complete-input-field-balham {
-        outline: initial;
-        padding-top: 0px;
-        padding-right: 0px;
-        padding-bottom: 0px;
-        padding-left: 0px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        box-sizing: border-box;
-        height: 28px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-    }`],
+    encapsulation: ViewEncapsulation.Emulated,
+    host: { style: `position: absolute;
+                    left: 0px; 
+                    top: 0px;
+                    background-color: transparent;
+                    max-height: 200px;
+                    max-width: 400px;
+                    ` },
     template: ` 
     <div (keydown)="onKeydown($event)">
-    <input 
-        #input
-        [(ngModel)]="inputValue"
-        class="auto-complete-input-field-balham" 
-        [style.width]="params.column.actualWidth + 'px'">
-    <ag-grid-angular
-        style="height: 200px; font-weight: 200;" 
-        class="ag-theme-balham"
-        [rowData]="rowData" 
-        [columnDefs]="columnDefs"
-        [headerHeight]="0"
-        [rowSelection]="rowSelection"
-        (gridReady)="onGridReady($event)"
-        (rowClicked)="rowClicked($event)"
-        >
-    </ag-grid-angular>
+      <input 
+          #input
+		  [(ngModel)]="inputValue"
+		  (ngModelChange)="processDataInput($event)"
+          style=" height: 28px; font-weight: 400; font-size: 12px;"
+          [style.width]="params.column.actualWidth + 'px'">
+      <ag-grid-angular
+		  style="font-weight: 150; height: 200px;" 
+          class="ag-theme-balham"
+          [rowData]="rowData" 
+		  [columnDefs]="columnDefs"
+          [rowSelection]="rowSelection"
+          (gridReady)="onGridReady($event)"
+          (rowClicked)="rowClicked($event)"
+          >
+      </ag-grid-angular>
     </div>
     `
 })
 export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewInit {
     // variables for agGrid
-    private params: any;
-    private gridApi: any;
-    private rowData: any;
-    private columnDefs: [{}];
-    private rowSelection: string = 'single';
+    public params: any;
+    public gridApi: any;
+    public rowData: any;
+    public columnDefs: [{}];
+	public rowSelection: string = 'single';
+	public columnFilter: any;
     // variables for component
-    private returnObject: boolean;
-    private cellValue: string;
-    private filteredRowData: any;
-    private inputValue: string;
-    private apiEndpoint: string;
-    private useApi: boolean;
-    private propertyName: string;
-    private isCanceled: boolean;
-    private selectedObject: any = {
+    public returnObject: boolean;
+    public cellValue: string;
+    public filteredRowData: any;
+    public inputValue: string;
+    public apiEndpoint: string;
+    public useApi: boolean;
+    public propertyName: string;
+    public isCanceled: boolean = true;
+    public selectedObject: any = {
       }
 
     @ViewChild("input") input: ElementRef;
 
-    constructor(private httpClient: HttpClient) {
-        
-    }
+    constructor(private httpClient: HttpClient) {}
 
  
-    // below puts focus in input field at start of cellEditor, or selects if field had a previous value
     ngAfterViewInit() {
         window.setTimeout(() => {
             if (this.inputValue == this.cellValue) {
@@ -88,16 +66,18 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
             } else {
                 this.input.nativeElement.focus();
             }
+            if (this.inputValue && !this.useApi) this.updateFilter();
         })
-        
-    }
+	}
+	
     // ICellEditorAngularComp functions
     agInit(params: any): void {
         this.params = params;
         if (!params.rowData) {
             this.apiEndpoint = params.apiEndpoint;
             this.useApi = true;
-            this.rowData = [{[params.propertyRendered]: 'Type at least 2 characters'}]
+            this.rowData = [{}]
+            // TODO: clean this up to have a valid dataRow
         } else {
             this.rowData = params.rowData;
         }
@@ -112,7 +92,6 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
             this.inputValue = params.charPress;
         }
     }
-
     
     getValue(): any {
         if (!this.returnObject) return this.selectedObject[this.propertyName];
@@ -128,7 +107,8 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     // ag-Grid functions
     onGridReady(params) {
         this.gridApi = params.api;
-        this.gridApi.sizeColumnsToFit();
+		this.gridApi.sizeColumnsToFit();
+		this.columnFilter = this.gridApi.getFilterInstance(this.propertyName);
     }
     
     // component functions
@@ -144,8 +124,8 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
             this.isCanceled = false;
         }
         this.params.api.stopEditing(); 
-    }
-    
+	}
+	
     onKeydown(event) {
         event.stopPropagation();
         if (event.key == "Escape") {
@@ -160,20 +140,21 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
             this.navigateGrid();
             return false;
         } 
-        this.processDataInput(event)
     }
-    
+
     processDataInput(event) {
-        window.setTimeout(() => {
-            if (this.useApi && this.inputValue.length == 2 && event.key != "Backspace") {
-                this.getApiData(this.inputValue).subscribe(data => {
-                    this.rowData = data;
-                    this.updateFilter(this.inputValue.toLowerCase());
-                });
-            } else {
-                this.updateFilter(this.inputValue.toLowerCase());
-            }
-        })
+		if (this.useApi) {
+			if (event.length == 0) this.gridApi.setRowData();
+			if (event.length == 2) {
+				this.getApiData(event).subscribe(data => { 
+					this.rowData = data;
+					setTimeout(() => {this.updateFilter()});
+				});
+			};
+			if (event.length > 2) this.updateFilter();
+		} else {
+			this.updateFilter();
+		}
     }
     
     getApiData(filter) {
@@ -183,21 +164,14 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     toQueryString(filter) {
         return "?" + this.propertyName + "=" + filter;
     }
-
-    updateFilter(value) {
-        this.filteredRowData = this.rowData.filter(row => 
-            row[this.propertyName].toLowerCase().includes(value))
-            .sort((a, b) => {
-                if(a[this.propertyName] < b[this.propertyName]) 
-                    { return -1; };
-                if(a[this.propertyName] > b[this.propertyName]) 
-                    { return 1; };
-                return 0;});
-                this.gridApi.setRowData(this.filteredRowData);
-                if(this.filteredRowData[0]) {
-                    this.gridApi.getRowNode(0).setSelected(true);
-                }
-
+    
+    updateFilter() {
+		this.columnFilter.setModel({
+			type: 'startsWith',
+			filter: this.inputValue,
+		});
+		this.columnFilter.onFilterChanged();
+		if(this.gridApi.getDisplayedRowAtIndex(0)) this.gridApi.getDisplayedRowAtIndex(0).setSelected(true);
     }
 
     navigateGrid() {
@@ -207,7 +181,6 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
         } else {
             this.gridApi.getRowNode(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
         }
-        
     }
 
 }
