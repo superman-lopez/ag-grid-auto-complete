@@ -49,7 +49,7 @@ This cellEditor can be used as an autocomplete text cell editor in for ag-Grid A
   ```js
   'apiEndpoint': '/api/cities/'
   ```
-  The component will use HttpClient to call the API and will query with the first 2 characters of the input field, with the `propertyRendered` as the query key.  For example its query would be: `/api/cities/?city=Pa` when the input field shows "Paris".  Even though the API query would only be basis "Pa" the grid is further filtered in the component to match "Paris".
+  The component will use `HttpClient` to call the API and will query with the first 2 characters of the input field, with the `propertyRendered` as the query key.  For example its query would be: `/api/cities/?city=Pa` when the input field shows "Paris".  Even though the API query would only be basis "Pa" the grid is further filtered in the component to match "Paris".
   
   ## Demonstration
   Demonstration on https://stackblitz.com/edit/ag-grid-auto-complete
