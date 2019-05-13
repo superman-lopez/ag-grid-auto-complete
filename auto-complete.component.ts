@@ -179,8 +179,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
             this.gridApi.setFocusedCell(0, this.propertyName);
             this.gridApi.getRowNode(0).setSelected(true);
         } else {
-            this.gridApi.getRowNode(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
+            this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
         }
     }
-
 }
