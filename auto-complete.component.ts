@@ -52,8 +52,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 	public useApi: boolean;
 	public propertyName: string;
 	public isCanceled: boolean = true;
-	public selectedObject: any = {
-	}
+	public selectedObject: any = {}
 
     @ViewChild("input") input: ElementRef;
 
@@ -184,7 +183,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 	navigateGrid() {
 		if(this.gridApi.getFocusedCell() == null || this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex) == null) { // check if no cell has focus, or if focused cell is filtered
 			this.gridApi.setFocusedCell(this.gridApi.getDisplayedRowAtIndex(0).rowIndex, this.propertyName);
-			this.gridApi.getRowNode(this.gridApi.getDisplayedRowAtIndex(0).rowIndex).setSelected(true);
+			this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
 		} else {
 			this.gridApi.setFocusedCell(this.gridApi.getFocusedCell().rowIndex, this.propertyName);
 			this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
