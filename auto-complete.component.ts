@@ -56,19 +56,19 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     constructor(private httpClient: HttpClient) {}
 
  
-    ngAfterViewInit() {
-        window.setTimeout(() => {
-            if (this.inputValue == this.cellValue) {
-                this.input.nativeElement.select();
-            } else {
-                this.input.nativeElement.focus();
-            }
-            if (this.inputValue && !this.useApi) this.updateFilter();
-        })
+	ngAfterViewInit() {
+		window.setTimeout(() => {
+			if (this.inputValue == this.cellValue) {
+				this.input.nativeElement.select();
+			} else {
+				this.input.nativeElement.focus();
+			}
+			if (this.inputValue && !this.useApi) this.updateFilter();
+		})
 	}
-	
-    // ICellEditorAngularComp functions
-    agInit(params: any): void {
+
+	// ICellEditorAngularComp functions
+	agInit(params: any): void {
 		this.params = params;
 		if (!params.rowData) {
 			this.apiEndpoint = params.apiEndpoint;
@@ -89,8 +89,8 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 		} else {
 			this.inputValue = params.charPress;
 		}
-    }
-    
+	}
+
 	getValue(): any {
 		if (!this.returnObject) return this.selectedObject[this.propertyName];
 		return this.selectedObject;
@@ -101,7 +101,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 	isCancelAfterEnd(): boolean {
 		return this.isCanceled
 	}
-    
+
 	// ag-Grid functions
 	onGridReady(params) {
 		this.gridApi = params.api;
@@ -123,10 +123,9 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 		}
 		this.params.api.stopEditing(); 
 	}
-	
+
 	@HostListener('keydown', ['$event'])
 	onKeydown(event) {
-		console.log("keyDown")
 		event.stopPropagation();
 		if (event.key == "Escape") {
 			this.params.api.stopEditing();
@@ -156,7 +155,7 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 			this.updateFilter();
 		}
 	}
-    
+
 	getApiData(filter) {
 		return this.httpClient.get(this.apiEndpoint + this.toQueryString(filter));
 	}
