@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ViewEncapsulation, ElementRef, HostListener } from '@angular/core';
 import { ICellEditorAngularComp } from 'ag-grid-angular';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,9 +12,7 @@ import { HttpClient } from '@angular/common/http';
 					background-color: transparant;
 					` },
     template: ` 
-    <div (keydown)="onKeydown($event)">
-		<input 
-			#input
+		<input #input
 			[(ngModel)]="inputValue"
 			(ngModelChange)="processDataInput($event)"
 			style=" height: 28px; font-weight: 400; font-size: 12px;"
@@ -27,10 +25,10 @@ import { HttpClient } from '@angular/common/http';
 			[rowData]="rowData" 
 			[columnDefs]="columnDefs"
 			[rowSelection]="rowSelection"
+			(cellKeyPress)="onKeydown($event)"
 			(gridReady)="onGridReady($event)"
 			(rowClicked)="rowClicked($event)">
 		</ag-grid-angular>
-	</div>
 	`
 })
 export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewInit {
@@ -127,7 +125,9 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 		this.params.api.stopEditing(); 
 	}
 	
+	@HostListener('keydown', ['$event'])
 	onKeydown(event) {
+		console.log("keyDown")
 		event.stopPropagation();
 		if (event.key == "Escape") {
 			this.params.api.stopEditing();
