@@ -5,13 +5,11 @@ import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'auto-complete',
-    encapsulation: ViewEncapsulation.Emulated,
+    encapsulation: ViewEncapsulation.None,
     host: { style: `position: absolute;
                     left: 0px; 
                     top: 0px;
-                    background-color: transparent;
-                    max-height: 200px;
-                    max-width: 400px;
+                    background-color: transparant;
                     ` },
     template: ` 
     <div (keydown)="onKeydown($event)">
@@ -22,7 +20,9 @@ import { HttpClient } from '@angular/common/http';
           style=" height: 28px; font-weight: 400; font-size: 12px;"
           [style.width]="params.column.actualWidth + 'px'">
       <ag-grid-angular
-		  style="font-weight: 150; height: 200px;" 
+		  style="font-weight: 150;" 
+		  [style.height]="gridHeight + 'px'"
+		  [style.max-width]="gridWidth + 'px'"
           class="ag-theme-balham"
           [rowData]="rowData" 
 		  [columnDefs]="columnDefs"
@@ -47,7 +47,9 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
     public cellValue: string;
     public filteredRowData: any;
     public inputValue: string;
-    public apiEndpoint: string;
+	public apiEndpoint: string;
+	public gridHeight: number = 175;
+	public gridWidth: number = 375;
     public useApi: boolean;
     public propertyName: string;
     public isCanceled: boolean = true;
@@ -77,10 +79,11 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
             this.apiEndpoint = params.apiEndpoint;
             this.useApi = true;
             this.rowData = [{}]
-            // TODO: clean this up to have a valid dataRow
         } else {
             this.rowData = params.rowData;
-        }
+		}
+		if (params.gridHeight) this.gridHeight = params.gridHeight;
+		if (params.gridWidth) this.gridWidth = params.gridWidth;
         this.columnDefs = params.columnDefs;
         this.propertyName = params.propertyRendered;
         this.cellValue = params.value[this.propertyName];
@@ -171,15 +174,21 @@ export class AutoCompleteComponent implements ICellEditorAngularComp, AfterViewI
 			filter: this.inputValue,
 		});
 		this.columnFilter.onFilterChanged();
-		if(this.gridApi.getDisplayedRowAtIndex(0)) this.gridApi.getDisplayedRowAtIndex(0).setSelected(true);
+		if(this.gridApi.getDisplayedRowAtIndex(0)) {
+			this.gridApi.getDisplayedRowAtIndex(0).setSelected(true);
+			this.gridApi.ensureIndexVisible(0, 'top');
+		} else {
+			this.gridApi.deselectAll();
+		}
     }
 
     navigateGrid() {
-        if(!this.gridApi.getFocusedCell()) {
-            this.gridApi.setFocusedCell(0, this.propertyName);
-            this.gridApi.getRowNode(0).setSelected(true);
+		if(this.gridApi.getFocusedCell() == null || this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex) == null) { // check if no cell has focus, or if focused cell is filtered
+            this.gridApi.setFocusedCell(this.gridApi.getDisplayedRowAtIndex(0).rowIndex, this.propertyName);
+            this.gridApi.getRowNode(this.gridApi.getDisplayedRowAtIndex(0).rowIndex).setSelected(true);
         } else {
-            this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
+			this.gridApi.setFocusedCell(this.gridApi.getFocusedCell().rowIndex, this.propertyName);
+			this.gridApi.getDisplayedRowAtIndex(this.gridApi.getFocusedCell().rowIndex).setSelected(true);
         }
     }
 }
