@@ -25,7 +25,6 @@ import { HttpClient } from '@angular/common/http';
 			[rowData]="rowData" 
 			[columnDefs]="columnDefs"
 			[rowSelection]="rowSelection"
-			(cellKeyPress)="onKeydown($event)"
 			(gridReady)="onGridReady($event)"
 			(rowClicked)="rowClicked($event)">
 		</ag-grid-angular>
