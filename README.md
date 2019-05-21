@@ -11,7 +11,7 @@ I was looking for an autocomplete cellEditor but could not find any.  I decided 
 
 For the last requirement, the [stackblitz](https://stackblitz.com/edit/ag-grid-auto-complete) example will show an example of both returning an object and returning just a value.
 
-![Screencast](https://im2.ezgif.com/tmp/ezgif-2-171c14541c7a.gif)
+![Screencast](https://media.giphy.com/media/RM5f4E5faFo7StPJQS/giphy.gif)
 
 ## Usage
 This cellEditor can be used as an autocomplete text cell editor in for ag-Grid Angular.  In the app component, the column definitions need to include the necessary configuration details under `cellEditorParams`:
