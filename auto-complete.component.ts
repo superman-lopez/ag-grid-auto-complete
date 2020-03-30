@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ViewEncapsulation, ElementRef, HostListener, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ICellEditorAngularComp } from 'ag-grid-angular';
 import { HttpClient } from '@angular/common/http';
+import { ICellEditorAngularComp } from 'ag-grid-angular';
 import { GridReadyEvent, RowClickedEvent, ColDef, GridApi } from 'ag-grid-community';
 
 
@@ -49,11 +49,11 @@ export class AgGridAutoCompleteComponent implements ICellEditorAngularComp, Afte
 	public cellValue: string;
 	public filteredRowData: any;
 	public inputValue: string;
+	public useApi: boolean = false;
 	public apiEndpoint: string;
 	public queryChars: number = 2;
 	public gridHeight: number = 175;
 	public gridWidth: number = 375;
-	public useApi: boolean;
 	public propertyName: string;
 	public isCanceled: boolean = true;
 	public selectedObject: any = {}
@@ -96,12 +96,12 @@ export class AgGridAutoCompleteComponent implements ICellEditorAngularComp, Afte
 		}
 		
 		if (!params.charPress) {
-			if(this.cellValue && !this.clearInputValue) this.inputValue = this.cellValue;
+			if(this.cellValue != null && !this.clearInputValue) this.inputValue = this.cellValue;
 		} else {
 			this.inputValue = params.charPress;
 		}
 
-		if (this.queryChars == 0 || (this.inputValue != null && this.inputValue != '' && this.inputValue.length > this.queryChars)) {
+		if (this.useApi == true && (this.queryChars == 0 || (this.inputValue != null && this.inputValue != '' && this.inputValue.length > this.queryChars))) {
 			this.getApiData(this.inputValue).subscribe(data => { 
 				this.rowData = data as Array<ColDef>;
 				this.changeDetection.detectChanges();
@@ -167,7 +167,7 @@ export class AgGridAutoCompleteComponent implements ICellEditorAngularComp, Afte
 	}
 
 	processDataInput(inputValue: string): void {
-		if (this.useApi) {
+		if (this.useApi == true) {
 			if (inputValue.length < this.queryChars) {
 				this.gridApi.setRowData([]);
 			}
