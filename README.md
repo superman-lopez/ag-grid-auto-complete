@@ -21,6 +21,11 @@ This cellEditor can be used as an autocomplete text cell editor in for ag-Grid A
 - `propertyRendered` the field that is shown in the renderer, and thus used for the text autocomplete.
 - `returnObject` boolean flag to return either the undelying object of the row, or the text value of the cell.  If enabled, the grid needs to be configured to show one value within the object.  Below has an example that uses `valueFormatter`.
 
+The ag-Grid component is a popup editor.  To make sure the popup is shown in the intended style, the correct popup parent needs to be selected.  This can be set in the grid options.  For example:
+```js
+this.gridOptions.popupParent = document.body;
+```
+
 
 ## Example
 ```js  columnDefs = [
